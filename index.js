@@ -46,6 +46,20 @@ async function run() {
       res.send(result);
     })
 
+    app.put('/rooms/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const options = {upsert : true}
+      const updatedStatus = req.body;
+      const room = {
+        $set: {
+          availability: false,
+      }
+      }
+      const result = await roomsCollection.updateOne(query, room, options)
+      res.send(result)
+    })
+
     // Room Booking API
     app.post('/room-bookings', async(req, res) => {
       const bookedRoom = req.body;
