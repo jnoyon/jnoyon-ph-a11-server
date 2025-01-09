@@ -46,19 +46,17 @@ async function run() {
       res.send(result);
     })
 
-    app.put('/rooms/:id', async(req, res) => {
+    app.put('/rooms/:id', async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
-      const options = {upsert : true}
-      const updatedStatus = req.body;
+      const query = { _id: new ObjectId(id) };
       const room = {
         $set: {
           availability: false,
-      }
-      }
-      const result = await roomsCollection.updateOne(query, room, options)
-      res.send(result)
-    })
+        },
+      };
+      const result = await roomsCollection.updateOne(query, room);
+      res.send(result);
+    });
 
     // Room Booking API
     app.post('/room-bookings', async(req, res) => {
@@ -78,6 +76,13 @@ async function run() {
     const query = {_id: new ObjectId(id)}
     const result = await bookedCollection.findOne(query);
     res.send(result);
+  })
+
+  app.delete('/room-bookings/:id', async(req, res) => {
+    const id = req.params.id;
+    const query = {_id: new ObjectId(id)}
+    const result = await bookedCollection.deleteOne(query);
+    res.send(result)
   })
 
 
