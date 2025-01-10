@@ -85,6 +85,16 @@ async function run() {
     res.send(result)
   })
 
+  app.patch("/room-bookings/:id", async (req, res) => {
+    const id = req.params.id;
+    const { date } = req.body;
+    const query = { _id: new ObjectId(id) };
+    const update = { $set: { date: date } };
+    const result = await bookedCollection.updateOne(query, update);
+    res.send(result);
+  });
+  
+
 
   } finally {
     // Ensures that the client will close when you finish/error
