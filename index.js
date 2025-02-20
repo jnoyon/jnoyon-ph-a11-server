@@ -31,6 +31,7 @@ async function run() {
 
 
     const roomsCollection = client.db('StockRoom').collection('roomCollection');
+    const reviewsCollection = client.db('StockRoom').collection('reviewCollection');
     const bookedCollection = client.db('StockRoom').collection('bookedCollection');
 
     app.get('/rooms', async(req, res)=> {
@@ -57,6 +58,44 @@ async function run() {
       const result = await roomsCollection.updateOne(query, room);
       res.send(result);
     });
+
+
+    // Room Review API
+    app.post('/reviews', async(req, res) => {
+      const newReview = req.body;
+      const result = await reviewsCollection.insertOne(newReview);
+      res.send(result);
+    })
+
+    app.get('/reviews', async(req, res)=> {
+      const cursor = reviewsCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+  });
+
+  app.get('/reviews/:id', async(req, res)=> {
+    const id = req.params.id;
+    const query = {_id: new ObjectId(id)}
+    const result = await reviewsCollection.findOne(query);
+    res.send(result);
+  })
+
+  app.delete('/reviews/:id', async(req, res) => {
+    const id = req.params.id;
+    const query = {_id: new ObjectId(id)}
+    const result = await reviewsCollection.deleteOne(query);
+    res.send(result)
+  })
+
+  app.patch("/reviews/:id", async (req, res) => {
+    const id = req.params.id;
+    const { date } = req.body;
+    const query = { _id: new ObjectId(id) };
+    const update = { $set: { date: date } };
+    const result = await reviewsCollection.updateOne(query, update);
+    res.send(result);
+  });
+
 
     // Room Booking API
     app.post('/room-bookings', async(req, res) => {
