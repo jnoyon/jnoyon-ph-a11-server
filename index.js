@@ -1,13 +1,18 @@
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const jwt = require('jsonwebtoken');
 const app = express();
 require('dotenv').config();
 const port = process.env.PORT || 3000;
 
-app.use(cors())
-app.use(express.json())
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://jnoyon-ph-a11.surge.sh'], // List both frontend origins
+  credentials: true,  // Allow sending cookies (if required)
+}));
 
+
+app.use(express.json())
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.n7gty.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
